@@ -7,7 +7,7 @@ $(document).ready(function() {
 
   $chunks.each(function () {
     if($(this).hasClass('r')) {
-      $(this).append("<div class=\"showopt\">Show Source</div><br style=\"line-height:22px;\"/>");
+      $(this).append("<div class=\"showopt\">Show Code</div><br style=\"line-height:22px;\"/>");
     } else {
       $(this).append("<div class=\"showopt\">Show Output</div><br style=\"line-height:22px;\"/>");
     }
