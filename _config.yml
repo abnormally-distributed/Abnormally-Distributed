@@ -1,1 +1,8 @@
 theme: jekyll-theme-architect
+navbar:
+  title: "Nicks Website"
+  left:
+    - text: "Home"
+      href: index.html
+    - text: "About Me"
+      href: about_me.html
