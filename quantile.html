@@ -207,12 +207,12 @@ f(y_i \mid \mathit{m}, \lambda, q) = \frac{q(1-q)}{\lambda} exp \Bigg\{{ -q_p\Bi
 <h2>Fitting a model with the brms package</h2>
 <p>The model structure defined by the priors I will use in the brms example is below:</p>
 <span class="math display">\[\begin{align}
-y_i \sim asym.~Laplace (\mu, \sigma, q) &amp; &amp; \text{family function in the GLM } \\
-\mu_q \sim \beta_0 + \beta_i...\beta_{ith} &amp; &amp; \text{quantile 'mean' determined by } \beta 
+y_i \sim asym.~Laplace (m, \lambda, q) &amp; &amp; \text{family function in the GLM } \\
+m_q \sim \beta_0 + \beta_i...\beta_{ith} &amp; &amp; \text{quantile 'mean' determined by } \beta 
  \\
 \beta_0 \sim student~t(\nu= 3, \mu=0, \sigma=10) &amp; &amp; \text{intercept by t-distribution} \\
 \beta_{i...i_th} \sim student~t(\nu= 3, \mu=0, \sigma=10) &amp; &amp; \text{coefficients by t-distribution} \\
-\sigma \sim half-student~t(\nu= 3, \mu=0, \sigma=10) &amp; &amp; \text{sigma by half-t-distribution} 
+\lambda \sim half-student~t(\nu= 3, \mu=0, \sigma=10) &amp; &amp; \text{scale by half-t-distribution} 
 \end{align}\]</span>
 <p>The first step is to load the data. These data are simulated, so don’t worry about playing around with the data set. To make things more interesting, I’ll use both Gender and Digit Span as predictors in addition to Age, but I won’t include any interaction terms.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">data =<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;https://tinyurl.com/y9uct2c5&quot;</span>,<span class="dt">header =</span> <span class="ot">TRUE</span>)
