@@ -1,0 +1,26 @@
+#TOC {
+
+font-size: medium;
+font-weight: bold;
+position: fixed;
+left: 0;
+top: 0;
+width: 20%;
+height: 100%;
+overflow:auto;
+opacity: 1;
+color: black;
+}
+
+body {
+max-width: 100%;
+margin: auto;
+margin-left: 20%;
+line-height: 20px;
+}
+
+.affix {
+  top: 0px;
+  width:100%;
+}
+
