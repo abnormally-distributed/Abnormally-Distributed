@@ -1,0 +1,20 @@
+---
+title: "Abnormally Distributed"
+subtitle: "Tutorials"
+date: "last update: `r format(Sys.Date(), format = '%d %B %Y')`" 
+output:
+  prettydoc::html_pretty:
+    theme: architect
+    code_folding: none
+    includes: 
+     in_header: ~/R/navbar.html
+
+---
+
+
+* Types of Regression Analysis 
+    + [Quantile Regression](https://abnormally-distributed.github.io/quantile.html)
+
+  
+
+  
