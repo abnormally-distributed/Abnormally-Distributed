@@ -127,7 +127,6 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li><a href="#least-absolute-squares">Least Absolute Squares</a></li>
 <li><a href="#weighted-least-squares">Weighted Least Squares</a></li>
 <li><a href="#least-trimmed-squares">Least Trimmed Squares</a></li>
-<li><a href="#m-estimators-and-extensions">M-Estimators and Extensions</a></li>
 </ul></li>
 <li><a href="#regularized-regresssion">Regularized Regresssion</a><ul>
 <li><a href="#ridge-regression">Ridge Regression</a></li>
@@ -356,6 +355,7 @@ function openCity(evt, cityName) {
 document.getElementById("defaultOpen").click();
 </script>
 </div>
+<p><br></p>
 <p>Another solution is to use heteroskedastic consistent variance-covariance matrices to calculate standard error. This is done through a family of estimators called “sandwich” estimators. Although this won’t change the coefficient estimates it will result in standard errors (and subsequently p-values or confidence intervals) corrected for the heteroskedasticity. For the sake of space I will show how to obtain this correction, but won’t go into the math behind it.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vcov.rob =<span class="st"> </span><span class="kw">vcovHC</span>(ols, <span class="dt">method=</span><span class="st">&quot;HC4m&quot;</span>)
 sammich =<span class="st"> </span><span class="kw">coeftest</span>(ols, vcov.rob)
@@ -428,12 +428,12 @@ Age
 <p>The error term in LTS is minimized by finding the subset <span class="math inline">\(k\)</span> of the data set that produces the smallest value of the error term. Alternatively the amount of trimming can be specified manually, but this may not give optimal results. However, LTS has relatively low efficiency, meaning it takes more observations to achieve stable results. This is somewhat intuitive, since trimming observations <em>does</em> reduce the original sample size. LTS does have the advantage of a very high breakdown point of 0.5. This means that LTS is insensitive to influence by outliers, provided that the outliers constitute less than 50 % of the data <span class="citation">(Mount et al. 2014)</span>. See <span class="citation">Venables and Ripley (2002)</span> and <span class="citation">Wilcox (2012b)</span> for more information on least trimmed squares regression.</p>
 <p>For an example the diabetes data from Bradley Efron’s Computer Age Statistical Inference website will be used, with some “corruptions” added to the data for an example predicting ldl cholesterol from hdl. All variables are scaled (as z-scores).</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">diabetes =<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;https://tinyurl.com/ycl5qcz5&quot;</span>, <span class="dt">header=</span><span class="ot">TRUE</span>)</code></pre></div>
-<p>Below are the two variables as a scatterplot, showing the presence of the outliers I added to the data.</p>
 <center>
 <img src="data:image/png;base64,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" /><!-- -->
 </center>
 <p><br></p>
 <p>An lts model can be fit with the ltsReg function in the <strong>robustbase</strong> package. Below is a comparison of the leasts squares and least trimmed squares fits. An LTS function is also available in the MASS package, but requires bootstrapping to obtain p-values.</p>
+<div>
 <style>
 /* Style the tab content */
 .tabcontentB {
@@ -444,7 +444,7 @@ Age
 }
 </style>
 <!-- Tab links -->
-<div class="tabB">
+<div class="tab">
 <button class="tablinks" onclick="openCity(event, 'LTS')" id="defaultOpenB">
 LTS
 </button>
@@ -601,8 +601,7 @@ function openCity(evt, cityName) {
 document.getElementById("defaultOpenB").click();
 </script>
 </div>
-<div id="m-estimators-and-extensions" class="section level3">
-<h3>M-Estimators and Extensions</h3>
+<p><br> ### M-Estimators and Extensions</p>
 <p>Weighted least square can also be applied to problems with regression outliers and leverage points. To do this, a set of optimal weights must be found. This is done through an <strong>iteratively weighted least squares</strong> (IWLS) approach where a family of maximum-likelihood like estimators (M-Estimators) are used to find an optimal set of weights.</p>
 <p>Generally speaking, M-Estimators work by minimizing a particular function <span class="math inline">\(\xi\)</span> on the residuals (which are scaled by a scale parameter <span class="math inline">\(\tau\)</span>) <span class="citation">(Wilcox 2012b)</span>.</p>
 <p><span class="math display">\[
@@ -695,7 +694,7 @@ SE_{\hat{\beta_a}} = \sqrt{\frac{sd(y-y_{pred})^2}{\sum x^2_a \cdot  \big(1-(y_{
 <p>Notice in the standard error formula the part of the denominator <span class="math inline">\(1-(y_{a\sim b}-y_{{pred}_{a\sim b}})^2\big)\)</span>. This represents the difference of the total possible explained variance (1) and the percentage of explained variance (coefficient of determination or <span class="math inline">\(R^2\)</span>) for a linear model of <span class="math inline">\(a\)</span> predicted by co-predictor <span class="math inline">\(b\)</span>. When there is perfect collinearity between a and b, the formula becomes 1-1=0, leading to a denominator of zero!</p>
 <p>Below is a plot of what happens to the standard error as a function of increased predictor correlation, holding the vector of x values and numerator the same and allowing only the <span class="math inline">\(R^2\)</span> for a~b to vary.</p>
 <center>
-<img src="data:image/png;base64,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" /><!-- -->
+<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAqAAAAHgCAMAAABNUi8GAAAAeFBMVEUAAAAAADYAAGEANokAYWEAYYkAYa40AAA0ADY0AGE0NgA0NmE0Nok0YWE0iIk0iK40iNFeAABeADZeAGFeNgBeYWFerPODNgCDNjaDiDaDiGGDz/OnYQCn8vPJiDbJrK7Jz4nJ8vPqrGHqz4nq8q7q8tHq8vP///9BZ2gXAAAACXBIWXMAAA7DAAAOwwHHb6hkAAANQUlEQVR4nO3da0Pa6oKGYdrOaNcctXuPdsbD7IWS9f//4SYkKKFKyYE3D3pdHyqiISnevjlA4qKCYIu5FwAOESjRBEo0gRJNoEQTKNEESjSBEk2gRBMo0QRKNIESTaBEEyjRBEq0SQJd/AW/tWi8/UWBMjeBku1AnwIlwPt9CpRsAiWaQIkmUKIJlGgCJZpAiSZQogmUaAIlmkCJJlDmcODV965JA32+vqqeLheLC4Fy0KH3L3VNGejqdt3nHw9V9XghUA44+A7QrikDff5x17T51C6A80Z40wR5DBpBf95Vy4v1jc0wWhlBecdMI2i1/HK3ur3ZrOoFygHzbIPWe0n1jL/cbR/kxP9NztY8e/G/PMhp/5N8AgIlmkCJJlCiCZRoAiWaQIkmUKIJlGgCJZpAiSZQogmUaAIlmkCJJlCiCZRoAiWaQIkmUKIJlGgCJZpAiSZQogmUaAIlmkCJJlCiCZRoAiWaQIkmUKIJlGgCJZpAiSZQogmUaAIlmkCJJlCiCZRoAiWaQIkmUKIJlGgCJZpAiSZQogmUaAIlmkCJJlCiCZRoAiWaQIkmUKIJlGgCJZpAiSZQogmUaAIlmkCJJlCiCZRoAiWaQIkmUKIJlGgCJZpAiSZQogmUaAIlmkCJJlCiCZRoAiWaQIkmUKIJlGgCJZpAiSZQogmUaAIlmkCJJlCiCZRoAiWaQIkmUKIJlGgCJZpAiSZQogmUaAIlmkCJJlCiCZRoAiWaQIkmUKIJlGgCJZpAiSZQogmUaAIlmkCJJlCiCZRoAiWaQIkmUKIJlGgCJdoJAn389qdAmciUgT5fL1pfHwTKJKYMtHq6vKo2I+g21CEPAkcY2Nbjeuy0imc6Ewe6Xs1fCJTpTB1oVS0XAmUy0we6+yBz/+84ewIlmkCJJlCiCZRoAiWaQIkmUKIJlGgCJZpAiSZQog0J9PnHnUApY0ig1f2NQCljSKDtqR3teR0C5YSGBHo0gTKWQIk2KNDV7XoN//K+eYFyOkMCXd1erP+9/32hAmWsIYE2h5me/rCTxMkNCdQISjFDArUNSjGDAj2WQBlrSKBe6qSYIYF6qZNihgTqpU6KGRLo0QTKWEMCtQ1KMUMCtQ1KMUMCtQ1KMUMCPZpAGUugROsd6GYP6f7Km0UoQqBEEyjRBEo0gRJNoETrH+j+3zsUKCfUO9A+BMpYAiWaQIkmUKIJlGgCJVrvQB1moqTegdYeL6rmYL1AObEhgbo2E8UMCdS1mShmSKDNtZkufpenQBlvUKDHEihjDQnUefEUMyRQ58VTzJBAnRdPMUMCPZpAGUugFLJe6Q6YalCgj1bx9LVppv9kQwJ9vr5ZfvvTS5300L6Bo/d0gwL9cff8twcvddJDyUBXtzern3cCpYeSgVZP3++Wi4VVPD0U3AY9mkB5VXAvXqCU0jtQ76inpN6B1ryjnlKGBOod9RQzJFDvqKeYIYF6Rz3FDAr0WAJlLIESbVCgS4eZKGRIoM/XTvmgkEGBOmmOUoYE2hyoFygFDAnUSXMUMyTQowmUsQRKtEGBOmmOUoYE6qQ5ihkUqJPmKGVIoE6ao5ghgTppjmIGBXosgTKWQIk2JFCnfFBM/0CfLtuzOp3ywen1D9S7mShoSKBHEyhjDQi0Pp3z0UlzFNE/0Md1n8uvD9X97wsVKGP1DnT1c70BWsdpL54Cegda7yGtbq8EShGDAn36vh5Flw4zcXq9A61X7/Vm6PO11+I5vf6Brm4XX+6q5RHvFREoo/UPtAeBMpZAiSZQogmUaAIlmkCJJlCiCZRoAiWaQIkmUKIJlGgCJZpAiSZQogmUaAIlmkCJJlCiCZRoAiWaQIkmUE5nsRidwKSBrm6bP62wvSqOQD+3zXWORz7GpIHW1xSrL84oUP5q+xxb6JSBNldeXn59eGoXbZLtBM7VSSMYHmi1/PYPIyiBI+j2mraP278zK9DPLW4bdHXbFipQaml78b88yBT/ST41gRJNoEQTKNEESjSBEk2gRBMo0QRKNIESTaBEEyjRBEo0gRJNoEQTKNEESjSBEk2gRBMo0QRKNIESTaBEEyjRBMqkJrhWQ4dAmdIUV7vpECgTmuR6YR0CZUICJZpAyWYblGz24vlUBEo0gRJNoEQTKNEESjSBEk2gRBMo0QRKNIESTaBEEyhjTf3+kA6BMtLk77DrECjjTP8e5Q6BMo5AiSZQstkGJZu9eD4vgRJNoEQTKNEESjSBMsBJd9w7BEp/pz302SFQejvxi0cdAqU3gRJNoGSzDUo2e/GwIVCiCZSjlFupdwmUYxTcLeoSKEcoeWCpS6AcQaBEEyjZbIMSp5OkvXjCzDZodgiUt8232dkhUN4mUKIJlGwRfQqUXRE77h0C5VXGoNkhUF6EbHZ2CJQXAiXPTpECJU4nybw+BfrJ7Q2acX0K9DMKX6t3CPTz2U1SoKTpNhnep0A/h90I4zc7OwT6Gfy6q55d5Q6BflTvJ3lOfQr0ozq0J3RGfQr0I3lv0DyvlXqXQD+O9wfN8+1ToGfuyEHzbPsU6Hn7kINmh0DPzocfNDsEeg5+Oc6+e/vDDZodAs3USe3dJj/moNkh0BjvDZOHmvyQg2aHQOfUY9X9iQbNDoEWdlSTBwL9BINmh0BPr3+Tvw6TZ/pC5XgCncj+Xk3nk95N7g2Tn6vJDoEOd3ivpvNJ7yY/cZJdAv2dd4eyIVuQmuxLoBvdOI4aGnuNjJoc6qMHenDTcPf2uB2ZA4FqcpRzDfTAPkSPTcPd26OaPDAjTY6SEOhxo9yR4Y0e/6bYq5HkZOYJdP+necQoN36fZFCgv/lVOPjcMoFZAv31hz6mqPGBHhiDDY0zmyPQiYe8YePfocFQhjnOM9Bjt0GP3r4l1fyBDtkGPXovnnM3R6AHD8MY8tg1S6Ba41jzBApHEijRBEq0aQO9b/bPrwTKRCYN9P7bn83HC4EyjSkDff5x19x4ao90TrKdAG8YF+gfD82DzP3rx9mbMtCXVft2VS9Qxpo00OrRThLTmjbQ/QeZ+3/H2RMo0QRKNIESTaBEO22gMNJJAz2Q7mkf/iiWoXGeyyDQIixDQ6BvsAyN81wGgRZhGRoCfYNlaJznMgi0CMvQiAsUxhEo0U4Q6Op28fWhc3PnnkJ25vh0uVjcNB/at6/Oswzrmc/5PCw3h8OvZngeXt/YPqSHEwR6f/H6jubm5s49hbzO8fn6plp+uauWZRegswzbmc/5PGwWY51F+edh/SPY5jigh+kDrU8IaX9l2ps79xSyM8flZuS6qe6vfjfR6Zahnfmsz0PV/K6Wfx6qx8V/toswpIfpA61n3Z611N7cuaeQvTmufzKrnyXnv7cM7cznfh4e69/V4s9D9f9/bmsc0sOnCHT9k3n+8W+LL0V/NjvL0M585uehXo9U5Z+H6nUbVKBvLMPa43oT6On7XfX8t5Kr193noZn5zM/DJpPyz0Ml0IPLsO5zO2LMu5kx//Nw8booBZehSgs0bCdpM36+3jvPMjSfzryT9LJ7NFugGTtJYYeZ6nVa1RxhefqPosf/XpdhO/NZDzNtNkHneB52joNGHGZa7zNvDsPWv7DtzfZDQa/L0Fzn7KY+lX+2ZdjOfM7nYTtuln8e2kAH9uClTqIJlGgCJZpAiSZQogmUaAIlmkCJJlCiCZRoAiWaQIkmUKIJlGgCJZpAiSZQogl0q74mzMu7zdefXOx+8f7A5WLa08De1ZxrMULxc4iSCHSriaz986P3V53mDibS+eIbqQp0DIFuNWltA1vdXv3ytXcI9JQEutUJ9OmyjWq9rv9y114gr1r9/L/FetX/9O9///rQnvi1XCz+pVnFb75pfW99CZHLzb/1t9VT3f7P9u/u7k65/qZ/vb3Ze6z6FP72Q2cGr8uyXsL/ffkzvvUl6y7KPk2lCXSrXcVf1LdXt+01CjfXxvv60Ga7uq1juqrrrYfF+oo6668/fqkDrW+tP2wuStBO1Ea+um2+r2q6351ycbN7z7rD5cuH7gyqnWW5vNqcPLy9p/iFbMoS6Fazk7R37beda2FU7cr68aI+1b79Qn3tvObry2bjdTOWthM1Z+Q3UzXh7095fbNzTxvxtuXODHaX5fv+BSFO/czMSqBbzWp6b3OxvXjjbqDLb/9oV+jrFe7jS6CPr4F2J9pm/TqPlynbb2rvqVfq9ZZE86E7g71lebmWzOWi/KXAyhLo1uaHvr/CfHsEfU3k4Ai6G2hz3Zn9Ka87uVXVdt39ulXxxgj6OsXmSmBG0E+ic5hpa38bdLNRWH9WV9duee5sg37frIC7E22maofm/SkXu49VT1pP1nzozmBvWbb1rnO+N4J+Es0P/fn6onvv5fbKntXL/vjms2Z/vf76f+3sxde7VzfdiTp78d0p2/3/7T2/7MW/zmBvWV6WZ7H477EHscIJtIfRRzT3fPTV8xQE2sOUgbZr8ske76MSaA+TjqCPH34HfBICJZpAiSZQogmUaAIlmkCJJlCiCZRoAiWaQIkmUKIJlGgCJZpAiSZQoi3+gmD/BCx8fGbKBq11AAAAAElFTkSuQmCC" /><!-- -->
 </center>
 <p><br></p>
 <div id="ridge-regression" class="section level3">
@@ -936,6 +935,7 @@ Petal.Width
 </tr>
 </tbody>
 </table>
+<p><br></p>
 <p>These values are far less than ideal, and warrant the use of a regularized regression. Ridge regression can be used with the glmnet package. The <strong>glmnet</strong> package allows the fitting of ridge, lasso, and elastic net (a combination of ridge and lasso) models. It requires the model be given to it as a matrix of predictors and a vector of dependent variable values, but this is easy to get using the model.matrix function.</p>
 <p>Next, I will fit the model using <em>k</em>-fold cross-validation. This splits the data into <span class="math inline">\(\textit{k}\)</span> subsets in order to fine tune the lambda parameter, which controls the amount of shrinkage. The returned model is then the model fit to the whole data set</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x.mat =<span class="kw">model.matrix</span>(Sepal.Width  <span class="op">~</span><span class="st"> </span>., train)[,<span class="op">-</span><span class="dv">1</span>]
@@ -949,6 +949,7 @@ cv.ridge =<span class="st"> </span><span class="kw">cv.glmnet</span>(x.mat,y.var
 </center>
 <p><br></p>
 <p>The coefficients for the best value of lambda can then be retrieved and made into a table. In a separate tab the results for the ordinary least squares model fit can be seen.</p>
+<div>
 <style>
 /* Style the tab content */
 .tabcontentC {
@@ -1107,6 +1108,7 @@ function openCity(evt, cityName) {
 document.getElementById("defaultOpenC").click();
 </script>
 </div>
+<p><br></p>
 <p>Ridge regression really shines when it comes to <em>out of sample predictive error</em>. Ordinary least squares can potentially over-fit the data, such that when presented with new cases it may not perform well. Ridge regression has the advantage that by under-fitting the model it generalizes to new samples more readily.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x.test =<span class="kw">model.matrix</span>(Sepal.Width <span class="op">~</span><span class="st"> </span>., test)[,<span class="op">-</span><span class="dv">1</span>]
 y.test =<span class="st"> </span>test<span class="op">$</span>Sepal.Width
@@ -1175,6 +1177,7 @@ MAE
 <div id="modeling-heteroskedastic-variance" class="section level3">
 <h3>Modeling Heteroskedastic Variance</h3>
 <p>One benefit of Bayesian model building is constructing a model where the variance of an independent variable <span class="math inline">\(y\)</span> depends on the value of <span class="math inline">\(x_i\)</span> is quite easy. This falls under the general category of distributional Bayesian modeling <span class="citation">(Umlauf and Kneib 2018)</span>. Distributional modeling attempts to estimate model parameters such as the variance from the data, rather than treating them as nuisance parameters, and is a useful alternative to quantile regression in situations like this <span class="citation">(Koenker, Leorato, and Peracchi 2013)</span>. The <strong>brms</strong> package can easily implement this model.</p>
+<div>
 <style>
 /* Style the tab content */
 .tabcontentD {
@@ -1225,16 +1228,16 @@ conf.high
 b_Intercept
 </td>
 <td style="text-align:right;">
--0.6901312
+-0.6981544
 </td>
 <td style="text-align:right;">
-0.3760112
+0.3815397
 </td>
 <td style="text-align:right;">
--1.4460854
+-1.5003434
 </td>
 <td style="text-align:right;">
-0.0293282
+0.0039283
 </td>
 </tr>
 <tr>
@@ -1242,16 +1245,16 @@ b_Intercept
 b_sigma_Intercept
 </td>
 <td style="text-align:right;">
--0.5404718
+-0.5409742
 </td>
 <td style="text-align:right;">
-0.2082275
+0.2117965
 </td>
 <td style="text-align:right;">
--0.9417074
+-0.9475223
 </td>
 <td style="text-align:right;">
--0.1262714
+-0.1209372
 </td>
 </tr>
 <tr>
@@ -1259,16 +1262,16 @@ b_sigma_Intercept
 b_Age
 </td>
 <td style="text-align:right;">
-0.0720998
+0.0727339
 </td>
 <td style="text-align:right;">
-0.0216250
+0.0220293
 </td>
 <td style="text-align:right;">
-0.0309166
+0.0279566
 </td>
 <td style="text-align:right;">
-0.1157594
+0.1149342
 </td>
 </tr>
 <tr>
@@ -1276,16 +1279,16 @@ b_Age
 b_sigma_Age
 </td>
 <td style="text-align:right;">
-0.0421116
+0.0421517
 </td>
 <td style="text-align:right;">
-0.0106258
+0.0107176
 </td>
 <td style="text-align:right;">
-0.0202793
+0.0212218
 </td>
 <td style="text-align:right;">
-0.0620897
+0.0629651
 </td>
 </tr>
 </tbody>
@@ -1321,16 +1324,16 @@ conf.high
 b_Intercept
 </td>
 <td style="text-align:right;">
--0.6524600
+-0.6480362
 </td>
 <td style="text-align:right;">
-0.4518508
+0.4529351
 </td>
 <td style="text-align:right;">
--1.5369346
+-1.5242901
 </td>
 <td style="text-align:right;">
-0.2253569
+0.2387324
 </td>
 </tr>
 <tr>
@@ -1338,16 +1341,16 @@ b_Intercept
 b_Age
 </td>
 <td style="text-align:right;">
-0.0698847
+0.0696351
 </td>
 <td style="text-align:right;">
-0.0231615
+0.0232452
 </td>
 <td style="text-align:right;">
-0.0247439
+0.0236176
 </td>
 <td style="text-align:right;">
-0.1153012
+0.1145285
 </td>
 </tr>
 <tr>
@@ -1355,16 +1358,16 @@ b_Age
 sigma
 </td>
 <td style="text-align:right;">
-1.3684002
+1.3696693
 </td>
 <td style="text-align:right;">
-0.0869715
+0.0855839
 </td>
 <td style="text-align:right;">
-1.1994993
+1.2058130
 </td>
 <td style="text-align:right;">
-1.5397555
+1.5369421
 </td>
 </tr>
 </tbody>
@@ -1397,6 +1400,8 @@ function openCity(evt, cityName) {
 // Get the element with id="defaultOpenD" and click on it
 document.getElementById("defaultOpenD").click();
 </script>
+</div>
+<p><br></p>
 </div>
 <div id="student-t-model" class="section level3">
 <h3>Student T Model</h3>
@@ -1436,16 +1441,16 @@ conf.high
 b_Intercept
 </td>
 <td style="text-align:right;">
--0.0531134
+-0.0518807
 </td>
 <td style="text-align:right;">
-0.0406638
+0.0403906
 </td>
 <td style="text-align:right;">
--0.1290558
+-0.1335647
 </td>
 <td style="text-align:right;">
-0.0312014
+0.0246811
 </td>
 </tr>
 <tr>
@@ -1453,16 +1458,16 @@ b_Intercept
 b_hdl
 </td>
 <td style="text-align:right;">
--0.1541344
+-0.1540760
 </td>
 <td style="text-align:right;">
-0.0416022
+0.0414662
 </td>
 <td style="text-align:right;">
--0.2388178
+-0.2309634
 </td>
 <td style="text-align:right;">
--0.0751728
+-0.0712865
 </td>
 </tr>
 <tr>
@@ -1470,16 +1475,16 @@ b_hdl
 sigma
 </td>
 <td style="text-align:right;">
-0.7335501
+0.7321908
 </td>
 <td style="text-align:right;">
-0.0374704
+0.0386226
 </td>
 <td style="text-align:right;">
-0.6584640
+0.6595099
 </td>
 <td style="text-align:right;">
-0.8030945
+0.8103602
 </td>
 </tr>
 <tr>
@@ -1487,16 +1492,16 @@ sigma
 nu
 </td>
 <td style="text-align:right;">
-5.4506621
+5.4133865
 </td>
 <td style="text-align:right;">
-1.1736926
+1.1911686
 </td>
 <td style="text-align:right;">
-3.4538370
+3.3439331
 </td>
 <td style="text-align:right;">
-7.8220899
+7.7970095
 </td>
 </tr>
 </tbody>
@@ -1511,6 +1516,7 @@ nu
 </center>
 <p><br></p>
 <p>The distribution is clearly skewed. For an example, let’s fit a model of bmi with age and hdl as predictors.</p>
+<div>
 <style>
 /* Style the tab content */
 .tabcontentE {
@@ -1561,16 +1567,16 @@ conf.high
 b_Intercept
 </td>
 <td style="text-align:right;">
--0.0040572
+-0.0038928
 </td>
 <td style="text-align:right;">
-0.0452570
+0.0457674
 </td>
 <td style="text-align:right;">
--0.0919107
+-0.0927215
 </td>
 <td style="text-align:right;">
-0.0830914
+0.0861433
 </td>
 </tr>
 <tr>
@@ -1578,16 +1584,16 @@ b_Intercept
 b_age
 </td>
 <td style="text-align:right;">
-0.2323828
+0.2320552
 </td>
 <td style="text-align:right;">
-0.0324541
+0.0326219
 </td>
 <td style="text-align:right;">
-0.1682791
+0.1683877
 </td>
 <td style="text-align:right;">
-0.2940627
+0.2972522
 </td>
 </tr>
 <tr>
@@ -1595,16 +1601,16 @@ b_age
 b_hdl
 </td>
 <td style="text-align:right;">
--0.2078317
+-0.2080734
 </td>
 <td style="text-align:right;">
-0.0384628
+0.0393863
 </td>
 <td style="text-align:right;">
--0.2825688
+-0.2843064
 </td>
 <td style="text-align:right;">
--0.1317973
+-0.1303651
 </td>
 </tr>
 <tr>
@@ -1612,16 +1618,16 @@ b_hdl
 sigma
 </td>
 <td style="text-align:right;">
-0.9485237
+0.9492181
 </td>
 <td style="text-align:right;">
-0.0368753
+0.0362647
 </td>
 <td style="text-align:right;">
-0.8767924
+0.8796179
 </td>
 <td style="text-align:right;">
-1.0209689
+1.0210291
 </td>
 </tr>
 <tr>
@@ -1629,16 +1635,16 @@ sigma
 alpha
 </td>
 <td style="text-align:right;">
-5.1056980
+5.1128051
 </td>
 <td style="text-align:right;">
-1.0395416
+1.0480318
 </td>
 <td style="text-align:right;">
-3.1560832
+3.2134268
 </td>
 <td style="text-align:right;">
-7.0541620
+7.2100664
 </td>
 </tr>
 </tbody>
@@ -1674,16 +1680,16 @@ conf.high
 b_Intercept
 </td>
 <td style="text-align:right;">
-0.0009823
+-0.0003448
 </td>
 <td style="text-align:right;">
-0.0441605
+0.0449536
 </td>
 <td style="text-align:right;">
--0.0845915
+-0.0879228
 </td>
 <td style="text-align:right;">
-0.0888706
+0.0858921
 </td>
 </tr>
 <tr>
@@ -1691,16 +1697,16 @@ b_Intercept
 b_age
 </td>
 <td style="text-align:right;">
-0.1617037
+0.1616910
 </td>
 <td style="text-align:right;">
-0.0444407
+0.0450829
 </td>
 <td style="text-align:right;">
-0.0730231
+0.0740293
 </td>
 <td style="text-align:right;">
-0.2452403
+0.2496552
 </td>
 </tr>
 <tr>
@@ -1708,16 +1714,16 @@ b_age
 b_hdl
 </td>
 <td style="text-align:right;">
--0.3173470
+-0.3173459
 </td>
 <td style="text-align:right;">
-0.0438963
+0.0438082
 </td>
 <td style="text-align:right;">
--0.4004900
+-0.4039143
 </td>
 <td style="text-align:right;">
--0.2324726
+-0.2313988
 </td>
 </tr>
 <tr>
@@ -1725,16 +1731,16 @@ b_hdl
 sigma
 </td>
 <td style="text-align:right;">
-0.9353102
+0.9348709
 </td>
 <td style="text-align:right;">
-0.0310937
+0.0318879
 </td>
 <td style="text-align:right;">
-0.8748927
+0.8762074
 </td>
 <td style="text-align:right;">
-0.9966891
+1.0019232
 </td>
 </tr>
 </tbody>
@@ -1767,6 +1773,8 @@ function openCity(evt, cityName) {
 // Get the element with id="defaultOpenE" and click on it
 document.getElementById("defaultOpenE").click();
 </script>
+</div>
+<p><br></p>
 <p>When compared to the Gaussian model, the skew normal model’s coefficients are of moderately different strengths. If the sample size were smaller or the coefficients smaller in magnitude, these differences could make the difference between declaring a coefficient to be credibly non-zero and not making such a claim. If the data in the dependent variable are skewed, the skew normal model is the safest bet. If the skewness is not enough to matter the coefficients will come out the same as a typical normal model.</p>
 </div>
 <div id="regularized-regresssion-1" class="section level3">
@@ -1810,16 +1818,16 @@ conf.high
 b_Intercept
 </td>
 <td style="text-align:right;">
-0.0018076
+0.0020479
 </td>
 <td style="text-align:right;">
-0.0362498
+0.0373395
 </td>
 <td style="text-align:right;">
--0.0712854
+-0.0700503
 </td>
 <td style="text-align:right;">
-0.0702790
+0.0741704
 </td>
 </tr>
 <tr>
@@ -1827,16 +1835,16 @@ b_Intercept
 b_Sepal.Length
 </td>
 <td style="text-align:right;">
-0.6367856
+0.6366583
 </td>
 <td style="text-align:right;">
-0.0637284
+0.0654164
 </td>
 <td style="text-align:right;">
-0.5181748
+0.5113319
 </td>
 <td style="text-align:right;">
-0.7674232
+0.7655038
 </td>
 </tr>
 <tr>
@@ -1844,16 +1852,16 @@ b_Sepal.Length
 b_Petal.Length
 </td>
 <td style="text-align:right;">
--0.9155646
+-0.9166436
 </td>
 <td style="text-align:right;">
-0.0995991
+0.0992095
 </td>
 <td style="text-align:right;">
--1.1144258
+-1.1045157
 </td>
 <td style="text-align:right;">
--0.7225610
+-0.7180442
 </td>
 </tr>
 <tr>
@@ -1861,16 +1869,16 @@ b_Petal.Length
 b_Petal.Width
 </td>
 <td style="text-align:right;">
--0.0129231
+-0.0121009
 </td>
 <td style="text-align:right;">
-0.0864754
+0.0850504
 </td>
 <td style="text-align:right;">
--0.1849838
+-0.1765799
 </td>
 <td style="text-align:right;">
-0.1528378
+0.1529008
 </td>
 </tr>
 <tr>
@@ -1878,16 +1886,16 @@ b_Petal.Width
 sigma
 </td>
 <td style="text-align:right;">
-0.7895200
+0.7897063
 </td>
 <td style="text-align:right;">
-0.0267196
+0.0266057
 </td>
 <td style="text-align:right;">
-0.7391031
+0.7414062
 </td>
 <td style="text-align:right;">
-0.8414364
+0.8439046
 </td>
 </tr>
 </tbody>
@@ -1896,7 +1904,7 @@ sigma
 <p>The model’s predictions can also be compared against a test sample to evaluate its performance, just as with any other regression model. Below is the mean square error, which is comparable (if not slightly better) than what was obtained using glmnet.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pred =<span class="st"> </span><span class="kw">as.data.frame</span>(<span class="kw">predict</span>(fit.ridge, <span class="dt">newdata=</span>x.test))
 <span class="kw">mean</span>((pred<span class="op">$</span>Estimate<span class="op">-</span>y.test)<span class="op">^</span><span class="dv">2</span>)</code></pre></div>
-<pre><code>## [1] 0.6779616</code></pre>
+<pre><code>## [1] 0.6780166</code></pre>
 </div>
 </div>
 <div id="conclusion" class="section level2">
