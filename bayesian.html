@@ -207,8 +207,9 @@ Next we draw observations <span class="math inline">\(y_i\)</span> from the dist
 <p>Such a model would be stated as:</p>
 <p><span class="math display">\[
 \sigma \sim student's \ \ t^{+}_{\small{half}}(3,0,10) \\
-\mu \sim student's \ \ t(3,0,10) \\ 
-y \sim normal(\mu, \sigma)
+\beta_i \sim ~ student's \ \ t(3,0,10) \\
+\alpha \sim student's \ \ t(3,0,10) \\ 
+y \sim normal(\alpha + \beta_ix_j, \sigma)
 \]</span></p>
 <p>Which corresponds to the Stan code shown below.</p>
 <br>
@@ -226,7 +227,7 @@ y \sim normal(\mu, \sigma)
 <p><span class="math display">\[
 \sigma \sim student's \ \ t^{+}_{\small{half}}(3,0,10) \\
 \lambda \sim gamma(\frac{1}{2P}, P)  \\
-\beta \sim normal(0,\lambda) \\ 
+\beta_i \sim normal(0,\lambda) \\ 
 \alpha \sim student's \ \ t(3,0,10) \\ 
 y \sim normal(\alpha + \beta_ix_j, \sigma)
 \]</span></p>
